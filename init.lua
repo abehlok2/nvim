@@ -346,10 +346,9 @@ require('lazy').setup {
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
+        window = {
+          width = 20,
+        },
         -- },
         -- pickers = {}
         extensions = {
@@ -643,6 +642,7 @@ require('lazy').setup {
           return 'make install_jsregexp'
         end)(),
       },
+      'zbirenbaum/copilot-cmp',
       'saadparwaiz1/cmp_luasnip',
 
       -- Adds other completion capabilities.
@@ -657,12 +657,19 @@ require('lazy').setup {
       --    set up the ones that are useful for you.
       -- 'rafamadriz/friendly-snippets',
     },
+
     config = function()
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
-
+      local has_words_before = function()
+        if vim.api.nvim_buf_get_option(0, 'buftype') == 'prompt' then
+          return false
+        end
+        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
+        return col ~= 0 and vim.api.nvim_buf_get_text(0, line - 1, 0, line - 1, col, {})[1]:match '^%s*$' == nil
+      end
       cmp.setup {
         snippet = {
           expand = function(args)
@@ -680,8 +687,18 @@ require('lazy').setup {
           ['<C-n>'] = cmp.mapping.select_next_item(),
           -- Select the [p]revious item
           ['<C-p>'] = cmp.mapping.select_prev_item(),
-
-          -- Accept ([y]es) the completion.
+          ['<Tab>'] = cmp.mapping(function(fallback)
+            if cmp.visible() then
+              local entry = cmp.get_selected_entry()
+              if not entry then
+                cmp.select_next_item { behavior = cmp.SelectBehavior.Select }
+              else
+                cmp.confirm()
+              end
+            else
+              fallback()
+            end
+          end, { 'i', 's' }), -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
           ['<C-y>'] = cmp.mapping.confirm { select = true },
@@ -785,7 +802,7 @@ require('lazy').setup {
 
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup {
-        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc' },
+        ensure_installed = { 'bash', 'c', 'html', 'lua', 'markdown', 'vim', 'vimdoc', 'python' },
         -- Autoinstall languages that are not installed
         auto_install = true,
         highlight = { enable = true },
@@ -810,8 +827,8 @@ require('lazy').setup {
   --  Here are some example plugins that I've included in the kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -820,8 +837,44 @@ require('lazy').setup {
   --    For additional information, see `:help lazy.nvim-lazy.nvim-structuring-your-plugins`
   { import = 'custom.plugins' },
   { 'MunifTanjim/nui.nvim' },
+  { 'Mofiqul/vscode.nvim' },
+  { 'WilliamHsieh/catppuccin.nvim' },
+  { 'rebelot/kanagawa.nvim' },
+  { 'nvim-tree/nvim-web-devicons' },
 }
-
+vim.cmd [[colorscheme vscode]]
+vim.keymap.set('n', '<C-Up>', ':resize +2<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-Down>', ':resize -2<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-Right>', ':vertical resize +2<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>th', ':ToggleTerm<CR>')
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Harpoon
+--local harpoon = require 'harpoon'
+--harpoon:setup()
+
+--vim.keymap.set('n', '<leader>a', function()
+-- harpoon:list():append()
+--end)
+--vim.keymap.set('n', '<leader>r', function()
+-- harpoon.ui:toggle_quick_menu(harpoon:list())
+--end)
+
+--vim.keymap.set('n', '<C-h>', function()
+-- harpoon:list():select(1)
+--end)
+--vim.keymap.set('n', '<C-j>', function()
+--  harpoon:list():select(2)
+--end)
+--vim.keymap.set('n', '<C-k>', function()
+--harpoon:list():select(3)
+--end)
+--vim.keymap.set('n', '<C-l>', function()
+--harpoon:list():select(4)
+--end)
+--
+--q create new file with leader bn
+vim.keymap.set('n', '<leader>bn', ':enew<CR>')
+vim.keymap.set('n', '<leader>bc', ':bdelete<CR>')
