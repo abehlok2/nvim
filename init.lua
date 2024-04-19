@@ -841,6 +841,7 @@ require('lazy').setup {
   { 'WilliamHsieh/catppuccin.nvim' },
   { 'rebelot/kanagawa.nvim' },
   { 'nvim-tree/nvim-web-devicons' },
+  { 'romgrk/barbar.nvim' },
 }
 vim.cmd [[colorscheme vscode]]
 vim.keymap.set('n', '<C-Up>', ':resize +2<CR>', { noremap = true, silent = true })
