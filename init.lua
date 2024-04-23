@@ -604,6 +604,9 @@ require('lazy').setup {
       }
     end,
   },
+  {
+    'nvim-neotest/nvim-nio',
+  },
 
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -843,7 +846,7 @@ require('lazy').setup {
   { 'nvim-tree/nvim-web-devicons' },
   { 'romgrk/barbar.nvim' },
 }
-vim.cmd [[colorscheme vscode]]
+vim.cmd [[colorscheme catppuccin]]
 vim.keymap.set('n', '<C-Up>', ':resize +2<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-Down>', ':resize -2<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>', { noremap = true, silent = true })
@@ -879,3 +882,4 @@ vim.keymap.set('n', '<leader>th', ':ToggleTerm<CR>')
 --q create new file with leader bn
 vim.keymap.set('n', '<leader>bn', ':enew<CR>')
 vim.keymap.set('n', '<leader>bc', ':bdelete<CR>')
+vim.api.nvim_set_hl(0, 'Comment', { fg = '#F5FFB4' })
