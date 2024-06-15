@@ -24,7 +24,7 @@ return {
         answer_sign = 'ﮧ', -- 🤖
         border_left_sign = '',
         border_right_sign = '',
-        max_line_length = 120,
+        max_line_length = 500,
         sessions_window = {
           active_sign = '  ',
           inactive_sign = '  ',
@@ -123,7 +123,7 @@ return {
         },
         submit = '<C-Enter>',
         submit_n = '<Enter>',
-        max_visible_lines = 25,
+        max_visible_lines = 500,
       },
       settings_window = {
         setting_sign = '  ',

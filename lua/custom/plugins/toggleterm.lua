@@ -1,5 +1,8 @@
 return {
   'akinsho/toggleterm.nvim',
   version = '*',
-  config = true,
+  opts = {
+    shell = 'pwsh',
+    size = 10,
+  },
 }

@@ -896,4 +896,5 @@ vim.api.nvim_set_keymap('n', '<leader>h', ':bprevious<CR>', { noremap = true, si
 vim.api.nvim_set_keymap('n', '<leader>cc', ':ChatGPTRun complete_code<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>cg', ':ChatGPT<CR>', { noremap = true, silent = true })
 
+vim.api.nvim_set_keymap('n', '<leader>p', ':Precognition toggle<CR>', { noremap = true, silent = true })
 require('copilot').setup {}
