@@ -758,6 +758,7 @@ require('lazy').setup {
   },
 
   { 'bluz71/vim-nightfly-colors', name = 'nightfly', lazy = false, priority = 1000 },
+  { 'diegoulloao/neofusion.nvim', priority = 1000, config = true },
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
@@ -851,7 +852,7 @@ require('lazy').setup {
     branch = 'harpoon2',
   },
 }
-vim.cmd [[colorscheme catppuccin]]
+vim.cmd [[colorscheme nightfly]]
 vim.keymap.set('n', '<C-Up>', ':resize +2<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-Down>', ':resize -2<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-Left>', ':vertical resize -2<CR>', { noremap = true, silent = true })
@@ -882,11 +883,10 @@ end)
 vim.keymap.set('n', '<C-4>', function()
   harpoon:list():select(4)
 end)
---
---q create new file with leader bn
+
+-- create new file with leader bn
 vim.keymap.set('n', '<leader>bn', ':enew<CR>')
 vim.keymap.set('n', '<leader>bc', ':bdelete<CR>')
-vim.api.nvim_set_hl(0, 'Comment', { fg = '#F5FFB4' })
 vim.api.nvim_set_keymap('n', '<leader>k', '<cmd>lua vim.lsp.buf.hover()<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>|', ':vsplit<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>l', ':bnext<CR>', { noremap = true, silent = true })
@@ -896,5 +896,10 @@ vim.api.nvim_set_keymap('n', '<leader>h', ':bprevious<CR>', { noremap = true, si
 vim.api.nvim_set_keymap('n', '<leader>cc', ':ChatGPTRun complete_code<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>cg', ':ChatGPT<CR>', { noremap = true, silent = true })
 
+-- Toggles Precongition
 vim.api.nvim_set_keymap('n', '<leader>p', ':Precognition toggle<CR>', { noremap = true, silent = true })
 require('copilot').setup {}
+
+vim.opt.fillchars = { eob = ' ' }
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
