@@ -236,7 +236,25 @@ require('lazy').setup {
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'numToStr/Comment.nvim', opts = {} },
+  {
+    'numToStr/Comment.nvim',
+    opts = {
+      ---@diagnostic disable: missing-fields
+      toggler = {
+        line = '<leader>cl',
+        block = '<leader>cb',
+      },
+      opleader = {
+        line = 'gc',
+        block = 'gb',
+      },
+      extra = {
+        above = '',
+        below = '',
+        eol = '',
+      },
+    },
+  },
 
   -- Here is a more advanced example where we pass configuration
   -- options to `gitsigns.nvim`. This is equivalent to the following lua:
@@ -749,14 +767,48 @@ require('lazy').setup {
       --  - va)  - [V]isually select [A]round [)]paren
       --  - yinq - [Y]ank [I]nside [N]ext [']quote
       --  - ci'  - [C]hange [I]nside [']quote
-      require('mini.ai').setup { n_lines = 500 }
+      require('mini.ai').setup {
+        n_lines = 500,
+        mappings = {
+          around = 'a',
+          inside = 'i',
+          around_next = '',
+          inside_next = '',
+          around_last = '',
+          inside_last = '',
+          goto_left = 'g[',
+          goto_right = 'g]',
+        },
+      }
 
       -- Add/delete/replace surroundings (brackets, quotes, etc.)
       --
       -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
       -- - sd'   - [S]urround [D]elete [']quotes
       -- - sr)'  - [S]urround [R]eplace [)] [']
-      require('mini.surround').setup()
+      -- Configure mini.surround with mappings similar to vim-surround
+      -- This avoids which-key overlapping warnings from the default mappings
+      require('mini.surround').setup {
+        mappings = {
+          add = 'ys',
+          delete = 'ds',
+          find = '',
+          find_left = '',
+          highlight = '',
+          replace = 'cs',
+          update_n_lines = '',
+          suffix_last = '',
+          suffix_next = '',
+        },
+        search_method = 'cover_or_next',
+      }
+
+      -- Remap adding surrounding for visual mode
+      vim.keymap.del('x', 'ys')
+      vim.keymap.set('x', 'S', [[:<C-u>lua MiniSurround.add('visual')<CR>]], { silent = true })
+
+      -- Special mapping for adding surrounding for the current line
+      vim.keymap.set('n', 'yss', 'ys_', { remap = true })
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
