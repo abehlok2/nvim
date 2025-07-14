@@ -127,6 +127,7 @@ vim.opt.signcolumn = 'yes'
 
 -- Decrease update time
 vim.opt.updatetime = 250
+vim.opt.timeout = true
 vim.opt.timeoutlen = 300
 
 -- Configure how new splits should be opened
@@ -138,7 +139,6 @@ vim.opt.splitbelow = true
 vim.opt.list = false
 
 vim.opt.listchars = {}
-
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -275,15 +275,16 @@ require('lazy').setup {
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
     config = function() -- This is the function that runs, AFTER loading
-      require('which-key').setup()
+      local wk = require 'which-key'
+      wk.setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
+      wk.register {
+        ['<leader>c'] = { name = '[C]ode', desc = 'which_key_ignore' },
+        ['<leader>d'] = { name = '[D]ocument', desc = 'which_key_ignore' },
+        ['<leader>r'] = { name = '[R]ename', desc = 'which_key_ignore' },
+        ['<leader>s'] = { name = '[S]earch', desc = 'which_key_ignore' },
+        ['<leader>w'] = { name = '[W]orkspace', desc = 'which_key_ignore' },
       }
     end,
   },
@@ -296,85 +297,85 @@ require('lazy').setup {
   -- Use the `dependencies` key to specify the dependencies of a particular plugin
 
   {
-  -- Fuzzy Finder (files, lsp, etc)
-  'nvim-telescope/telescope.nvim',
-  event = 'VimEnter',
-  branch = '0.1.x',
-  dependencies = {
-    'nvim-lua/plenary.nvim',
-    { -- If encountering errors, see telescope-fzf-native README for install instructions
-      'nvim-telescope/telescope-fzf-native.nvim',
-      build = 'make',
-      cond = function()
-        return vim.fn.executable 'make' == 1
-      end,
-    },
-    { 'nvim-telescope/telescope-ui-select.nvim' },
-    { 'nvim-telescope/telescope-file-browser.nvim' }, -- Adding the file browser extension
-    -- Optional: Nerd fonts for icons, if using a Nerd Font setup
-    -- { 'nvim-tree/nvim-web-devicons' },
-  },
-  config = function()
-    require('telescope').setup {
-      defaults = {
-        -- Default configuration for telescope
-        -- See `:help telescope.setup()`
-        layout_config = {
-          width = 0.75,
-        },
+    -- Fuzzy Finder (files, lsp, etc)
+    'nvim-telescope/telescope.nvim',
+    event = 'VimEnter',
+    branch = '0.1.x',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      { -- If encountering errors, see telescope-fzf-native README for install instructions
+        'nvim-telescope/telescope-fzf-native.nvim',
+        build = 'make',
+        cond = function()
+          return vim.fn.executable 'make' == 1
+        end,
       },
-      extensions = {
-        ['ui-select'] = {
-          require('telescope.themes').get_dropdown(),
+      { 'nvim-telescope/telescope-ui-select.nvim' },
+      { 'nvim-telescope/telescope-file-browser.nvim' }, -- Adding the file browser extension
+      -- Optional: Nerd fonts for icons, if using a Nerd Font setup
+      -- { 'nvim-tree/nvim-web-devicons' },
+    },
+    config = function()
+      require('telescope').setup {
+        defaults = {
+          -- Default configuration for telescope
+          -- See `:help telescope.setup()`
+          layout_config = {
+            width = 0.75,
+          },
         },
-        file_browser = {
-          theme = "ivy",
-          hijack_netrw = true,
+        extensions = {
+          ['ui-select'] = {
+            require('telescope.themes').get_dropdown(),
+          },
+          file_browser = {
+            theme = 'ivy',
+            hijack_netrw = true,
+          },
         },
       }
-    }
 
-    -- Enable telescope extensions, if they are installed.
-    require('telescope').load_extension('fzf')
-    require('telescope').load_extension('ui-select')
-    require('telescope').load_extension('file_browser')
+      -- Enable telescope extensions, if they are installed.
+      require('telescope').load_extension 'fzf'
+      require('telescope').load_extension 'ui-select'
+      require('telescope').load_extension 'file_browser'
 
-    -- See `:help telescope.builtin`
-    local builtin = require('telescope.builtin')
+      -- See `:help telescope.builtin`
+      local builtin = require 'telescope.builtin'
 
-    -- Keymaps for telescope
-    vim.keymap.set('n', '<leader>sb', ":Telescope file_browser<CR>", { desc = '[f]ile [b]rowser' })
-    vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-    vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-    vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-    vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-    vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-    vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-    vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-    vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-    vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files' })
-    vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      -- Keymaps for telescope
+      vim.keymap.set('n', '<leader>sb', ':Telescope file_browser<CR>', { desc = '[f]ile [b]rowser' })
+      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
+      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
+      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
+      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
+      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
+      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
+      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
+      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
+      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files' })
+      vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
 
-    -- Override default behavior for current buffer fuzzy find
-    vim.keymap.set('n', '<leader>/', function()
-      builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
-        winblend = 10,
-        previewer = false,
-      })
-    end, { desc = '[/] Fuzzily search in current buffer' })
+      -- Override default behavior for current buffer fuzzy find
+      vim.keymap.set('n', '<leader>/', function()
+        builtin.current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+          winblend = 10,
+          previewer = false,
+        })
+      end, { desc = '[/] Fuzzily search in current buffer' })
 
-    -- Live grep in open files
-    vim.keymap.set('n', '<leader>s/', function()
-      builtin.live_grep {
-        grep_open_files = true,
-        prompt_title = 'Live Grep in Open Files',
-      }
-    end, { desc = '[S]earch [/] in Open Files' })
+      -- Live grep in open files
+      vim.keymap.set('n', '<leader>s/', function()
+        builtin.live_grep {
+          grep_open_files = true,
+          prompt_title = 'Live Grep in Open Files',
+        }
+      end, { desc = '[S]earch [/] in Open Files' })
 
-    -- Search Neovim configuration files
-    vim.keymap.set('n', '<leader>sn', function()
-      builtin.find_files { cwd = vim.fn.stdpath 'config' }
-    end, { desc = '[S]earch [N]eovim files' })
+      -- Search Neovim configuration files
+      vim.keymap.set('n', '<leader>sn', function()
+        builtin.find_files { cwd = vim.fn.stdpath 'config' }
+      end, { desc = '[S]earch [N]eovim files' })
     end,
   },
 
