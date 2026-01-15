@@ -248,11 +248,6 @@ require('lazy').setup {
         line = 'gc',
         block = 'gb',
       },
-      extra = {
-        above = '',
-        below = '',
-        eol = '',
-      },
     },
   },
 
