@@ -112,6 +112,11 @@ vim.opt.showmode = false
 --  See `:help 'clipboard'`
 vim.opt.clipboard = 'unnamedplus'
 
+-- Use PowerShell for :term on Windows when available.
+if (vim.fn.has 'win32' == 1 or vim.fn.has 'win64' == 1) and vim.fn.executable 'pwsh' == 1 then
+  vim.opt.shell = 'pwsh'
+end
+
 -- Enable break indent
 vim.opt.breakindent = true
 
